@@ -4,7 +4,7 @@ Link do Heroku
 https://app-participant2.herokuapp.com/
 
 
-https://app-participant2.herokuapp.com//meetings	GET	list of all meetings
+https://app-participant2.herokuapp.com//meetings	GET	list of all meetings <br/>
 https://app-participant2.herokuapp.com//meetings/{id}	GET	get meeting with given id
 https://app-participant2.herokuapp.com//meetings	POST	add meeting
 https://app-participant2.herokuapp.com//meetings/{id}	DELETE	delete meeting with given id
