@@ -16,8 +16,6 @@ import com.company.enroller.model.Participant;
 import com.company.enroller.persistence.MeetingService;
 import com.company.enroller.persistence.ParticipantService;
 
-import javafx.print.Collation;
-
 @RestController
 @RequestMapping("/meetings") // dany kontroler obsluguje dana scierzke
 public class MeetingsRestController {
