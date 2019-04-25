@@ -5,6 +5,8 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +20,82 @@ public class ParticipantRestController {
 
 	@Autowired
 	ParticipantService participantService;
+	// nie ma konstruktora, serwis ustawia Spring (instancjonuje obiekty klasy)
+	// bez @Autowired participantService byłby null`em bo by go nie znalazł w ParticipantService
 
+
+	// http://localhost:8080/participants
+	// obsluga metody get
 	@RequestMapping(value = "", method = RequestMethod.GET)
+//	obsluga uczestnikow
 	public ResponseEntity<?> getParticipants() {
+		// kontroler pobiera uczestnikow z serwisu
+		// rest nic nie wie o hibernate tylko chce dane
 		Collection<Participant> participants = participantService.getAll();
+		// odpowiedz do klienta springowe nazewnictwo
+		// kozysta z Jaksona ale robi to pod spodem, wyswietla odpowiedz dla klienta (nas)
 		return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
 	}
+	
+	// ADD
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	// dostalismy login na wejsciu
+	// id mapujemy jako argument do funkcji @PathVariable("id")
+	public ResponseEntity<?> getParticipant(@PathVariable("id") String login) {
+		
+	     Participant participant = participantService.findByLogin(login);
+	     if (participant == null) {
+	         return new ResponseEntity(HttpStatus.NOT_FOUND);
+	     }
+	     
+	     return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	 }
+	
+	
+	// DELETE
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteParticipant(@PathVariable("id") String login) {
+		
+	     Participant participant = participantService.findByLogin(login);
+	     if (participant == null) {
+	         return new ResponseEntity(HttpStatus.NOT_FOUND);
+	     }
+	     participantService.delete(participant);
+	     return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	 }	
+	
+	// UPDATE PASSWORD
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateParticipantPassword(@PathVariable("id") String login,
+			// pobieramy dane usera ?
+			@RequestBody Participant incomingParticipant){
+		
+	     Participant participant = participantService.findByLogin(login);
+	     if (participant == null) {
+	         return new ResponseEntity(HttpStatus.NOT_FOUND);
+	     }		
+	     participant.setPassword(incomingParticipant.getPassword());
+	     participantService.update(participant);
+	     return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	}
+	
+	
+	
+	
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	 public ResponseEntity<?> registerParticipant(@RequestBody Participant participant){
+		// jesli user istnieje to zwracamy blad
+		
+	     Participant foundParticipant = participantService.findByLogin(participant.getLogin());
+	     if (foundParticipant != null) {
+	    	 return new ResponseEntity("Unable to create. A participant with login " + participant.getLogin() + " already exist.", HttpStatus.CONFLICT);
+	     }		
+	     
+	     // dodajemy nowego usera
+	     participantService.add(participant);
+	     return new ResponseEntity<Participant>(participant, HttpStatus.CREATED);
+	     
+		}
+
 
 }
