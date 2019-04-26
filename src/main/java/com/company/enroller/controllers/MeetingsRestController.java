@@ -151,6 +151,14 @@ public class MeetingsRestController {
 		meetingService.kickParticipantFromMeeting(id, participant);
 		meetingService.update(meeting);
         return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
-    }
+	}
+	
+	// SORT
+	// http://localhost:8080/meetings/sortedByTitle
+	@RequestMapping(value="/sortedByTitle", method = RequestMethod.GET)
+	public ResponseEntity<?> getMeetingSortedByTitle(){
+		Collection<Meeting> meetings = meetingService.getAllSorted();
+		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+	}
 
 }

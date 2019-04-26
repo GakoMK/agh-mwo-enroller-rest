@@ -1,6 +1,9 @@
 package com.company.enroller.persistence;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Comparator;
+
 
 import org.hibernate.Query;
 import org.hibernate.Transaction;
@@ -70,4 +73,17 @@ public class MeetingService {
 	    connector.getSession().save(participant);
 	    transaction.commit();
 	}	
+
+	public Collection<Meeting> sortByTitle() {
+        List<Meeting> meetings = connector.getSession().createCriteria(Meeting.class).list();
+        meetings.sort(Comparator.comparing(Meeting::getTitle, String.CASE_INSENSITIVE_ORDER));
+        return meetings;
+	}
+	
+
+	public Collection<Meeting> getAllSorted() {
+		String hql = "FROM Meeting ORDER BY LOWER(title) ASC";
+		Query query = connector.getSession().createQuery(hql);
+		return query.list();
+	}
 }
