@@ -165,7 +165,7 @@ public class MeetingsRestController {
 	// SEARCH BY
 	// http://localhost:8080/meetings/searchByParticipant?id=user3
     @RequestMapping(value = "/searchByParticipant", method = RequestMethod.GET)
-    public  ResponseEntity<?> searchMeetingsByParticipant(@RequestParam String id) {
+    public  ResponseEntity<?> searchMeetingsByParticipant2(@RequestParam String id) {
         Participant participant = participantService.findByLogin(id);
         if (participant == null) {
             return new ResponseEntity<>("Participant with login " + id + " doesn't exist.", HttpStatus.NOT_FOUND);
