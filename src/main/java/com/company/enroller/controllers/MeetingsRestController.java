@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.company.enroller.model.Meeting;
@@ -160,5 +161,21 @@ public class MeetingsRestController {
 		Collection<Meeting> meetings = meetingService.getAllSorted();
 		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
 	}
+
+	// SEARCH BY
+	// http://localhost:8080/meetings/searchByParticipant?id=user3
+    @RequestMapping(value = "/searchByParticipant", method = RequestMethod.GET)
+    public  ResponseEntity<?> searchMeetingsByParticipant(@RequestParam String id) {
+        Participant participant = participantService.findByLogin(id);
+        if (participant == null) {
+            return new ResponseEntity<>("Participant with login " + id + " doesn't exist.", HttpStatus.NOT_FOUND);
+        }
+
+        Collection<Meeting> meetings = meetingService.searchMeetingsByParticipant(id);
+        if (meetings.size() == 0) {
+            return new ResponseEntity<>("Meeting does not exist.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+    }
 
 }

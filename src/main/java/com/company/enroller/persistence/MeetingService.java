@@ -80,10 +80,18 @@ public class MeetingService {
         return meetings;
 	}
 	
-
 	public Collection<Meeting> getAllSorted() {
 		String hql = "FROM Meeting ORDER BY LOWER(title) ASC";
 		Query query = connector.getSession().createQuery(hql);
 		return query.list();
 	}
+
+    public Collection<Meeting> searchMeetingsByParticipant(String login) {
+	    Transaction transaction = connector.getSession().beginTransaction();
+        String hql = "SELECT m FROM Meeting m JOIN m.participants p WHERE p.login LIKE ?";
+        Query query = connector.getSession().createQuery(hql);
+        query.setParameter(0, login);
+        transaction.commit();
+        return query.list();
+    }
 }
