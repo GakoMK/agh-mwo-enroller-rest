@@ -13,3 +13,4 @@ https://app-participant2.herokuapp.com/meetings/{meetingId}/participants/{partic
 https://app-participant2.herokuapp.com/meetings/{meetingId}/participants/{participantId}	DELETE	remove participant from meeting <br/>
 https://app-participant2.herokuapp.com/meetings/{id}/participants	GET	return participants for meeting with given id <br/>
 https://app-participant2.herokuapp.com/meetings/sortedByTitle GET sorted meetings by title <br/>
+https://app-participant2.herokuapp.com/meetings/searchByParticipant?id=user3 GET find meeting by user
